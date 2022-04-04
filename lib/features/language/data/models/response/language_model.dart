@@ -1,6 +1,6 @@
 import '../../../../../app_vendor/app_vendor_export.dart';
 import '../../../language_export.dart';
-import '../../../../../config/constants/constant_export.dart';
+import '../../../../../config/config_export.dart';
 
 class LanguageModel extends Language {
   LanguageModel(
@@ -50,7 +50,7 @@ class LanguageModel extends Language {
     } on Failure {
       rethrow;
     } catch (e) {
-      throw JsonMapFailure(message: e.toString());
+      throw mappingFailedMessage<LanguageModel>();
     }
   }
 }

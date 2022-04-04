@@ -1,4 +1,4 @@
-import '../../../../../config/constants/all_constants/json_constants.dart';
+import '../../../../../config/config_export.dart';
 import '../../../../../app_vendor/app_vendor_export.dart';
 import '../../../language_export.dart';
 
@@ -62,7 +62,7 @@ class LanguageRecordModel extends LanguageRecord {
     } on Failure {
       rethrow;
     } catch (e) {
-      throw JsonMapFailure(message: e.toString());
+      throw mappingFailedMessage<LanguageRecordModel>();
     }
   }
 }
