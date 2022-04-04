@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 class DScaffold extends StatelessWidget {
   final Widget body;
   final List<DBreadCrumb> breadCrumbs;
-  const DScaffold({Key? key, required this.body, this.breadCrumbs = const [],}) : super(key: key);
+  final VoidCallback? onBackTapped;
+  const DScaffold({Key? key, required this.body, this.breadCrumbs = const [], this.onBackTapped,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return _CustomScaffold(
-      appBar: _CustomAppBar(breadCrumbs: breadCrumbs,),
+      appBar: _CustomAppBar(breadCrumbs: breadCrumbs, onBackTapped: onBackTapped,),
       body: body,
     );
   }
@@ -41,7 +42,8 @@ class _CustomScaffold extends StatelessWidget {
 
 class _CustomAppBar extends StatefulWidget {
   final List<DBreadCrumb> breadCrumbs;
-  const _CustomAppBar({Key? key, required this.breadCrumbs,}) : super(key: key);
+  final VoidCallback? onBackTapped;
+  const _CustomAppBar({Key? key, required this.breadCrumbs, this.onBackTapped,}) : super(key: key);
 
   @override
   State<_CustomAppBar> createState() => _CustomAppBarState();
@@ -74,16 +76,32 @@ class _CustomAppBarState extends State<_CustomAppBar> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 60,
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: (){
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.chevron_left,),
-          ),
-          ..._breadCrumbs,
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if(widget.onBackTapped == null){
+            return Row(
+              children: _breadCrumbs
+            );
+          }
+          else {
+            return Row(
+              children: [
+                _buildBackButton(),
+                ..._breadCrumbs,
+              ],
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildBackButton(){
+    return Tooltip(
+      message: 'Back',
+      child: IconButton(
+        onPressed: widget.onBackTapped,
+        icon: const Icon(Icons.chevron_left,),
       ),
     );
   }
@@ -105,7 +123,7 @@ class _DBreadCrumbItem extends StatelessWidget {
         message: title,
         child: TextButton(
           onPressed: onTapped,
-          child: const Text('Record Status Type', overflow: TextOverflow.ellipsis, maxLines: 1,),
+          child: Text(title, overflow: TextOverflow.ellipsis, maxLines: 1,),
         ),
       ),
     );
